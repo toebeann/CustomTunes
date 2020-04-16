@@ -1,0 +1,12 @@
+﻿{
+    "Id": "Straitjacket.Subnautica.Mods.CustomTunes",
+    "DisplayName": "CustomTunes",
+    "Author": "Tobey Blaber",
+    "Version": "1.0.1",
+    "AssemblyName": "Straitjacket.Subnautica.Mods.CustomTunes.dll",
+    "Enable": true,
+    "Game": "Subnautica",
+    "VersionDependencies": {
+        "SMLHelper": "2.6.1"
+    }
+}
