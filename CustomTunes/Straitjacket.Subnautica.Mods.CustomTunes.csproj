@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Straitjacket.Subnautica.Mods.CustomTunes</RootNamespace>
     <AssemblyName>Straitjacket.Subnautica.Mods.CustomTunes</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -47,6 +47,9 @@
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="MimeTypes">
+      <HintPath>..\..\..\..\..\Users\Toadbomb\source\repos\MimeTypeMap\src\MimeTypes\bin\Release\net4\MimeTypes.dll</HintPath>
     </Reference>
     <Reference Include="NAudio">
       <HintPath>E:\Toadbomb\Downloads\NAudio-Release\NAudio.dll</HintPath>

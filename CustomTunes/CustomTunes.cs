@@ -8,15 +8,14 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using NAudio.Wave;
-using UnityEngine;
-using UWE;
-using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
+using MimeTypes;
 using SMLHelper.V2.Handlers;
 using SMLHelper.V2.Utility;
+using NAudio.Wave;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Security.Policy;
-using System.Web;
+using UWE;
+using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -69,12 +68,13 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     Console.WriteLine("[CustomTunes] Urlmon.dll could not be loaded:");
                     Console.WriteLine($"[CustomTunes] {e.Message}");
                     Console.WriteLine("[CustomTunes] Resorting to mime type mapping via file extension rather than file signature.");
-                    return MimeMapping.GetMimeMapping(filename);
+
+                    return MimeTypeMap.GetMimeType(Path.GetExtension(filename));
                 }
             }
             else
             {
-                return MimeMapping.GetMimeMapping(filename);
+                return MimeTypeMap.GetMimeType(Path.GetExtension(filename));
             }
         }
 
@@ -193,7 +193,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         };
         private static bool ValidAudioFile(string filename)
         {
-            var preliminaryMimeType = MimeMapping.GetMimeMapping(filename);
+            var preliminaryMimeType = MimeTypeMap.GetMimeType(Path.GetExtension(filename));
             if (!acceptedMimeTypes.Any(acceptedMimeType => acceptedMimeType.IsMatch(preliminaryMimeType)))
             {
                 return false;
