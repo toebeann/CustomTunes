@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Straitjacket.Utility;
 using MimeTypes;
 using SMLHelper.V2.Handlers;
 using SMLHelper.V2.Utility;
@@ -145,6 +146,11 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         {
             Config.Load();
             OptionsPanelHandler.RegisterModOptions(new Options());
+
+            VersionChecker.Check<ModJson>(
+                "https://github.com/tobeyStraitjacket/Straitjacket.Subnautica.Mods.CustomTunes/raw/master/CustomTunes/mod.json",
+                displayName: "CustomTunes ♫"
+             );
         }
 
         private static string tempPath = null;
@@ -181,7 +187,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 {
                     continue;
                 }
-                
+
                 CustomMusic.Add(filename, null);
             }
         }
@@ -227,11 +233,9 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             }
         }
 
-        private readonly float minSilenceLength = 1;
-        private readonly float maxSilenceLength = 120;
         private float timeOfLastMusic;
         private AudioSource musicSource;
-        private float currentSilenceLength => UnityEngine.Random.Range(minSilenceLength, maxSilenceLength);
+        private float currentSilenceLength => UnityEngine.Random.Range(Config.MinimumDelay, Config.MaximumDelay);
         private bool stopped = false;
         private bool paused = false;
         private bool generatingAudioClip = false;
@@ -422,7 +426,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             WaitScreen.ManualWaitItem waitItemOST = null;
             yield return new WaitUntil(() => WaitScreen.main != null);
 
-            waitItemOST = WaitScreen.Add("Preloading OST");
+            waitItemOST = WaitScreen.Add("Preloading OST ♫");
 
             foreach (var audioClipPath in OST.ToList())
             {
@@ -457,7 +461,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             WaitScreen.ManualWaitItem waitItemCustomMusic = null;
             yield return new WaitUntil(() => WaitScreen.main != null);
 
-            waitItemCustomMusic = WaitScreen.Add("Preloading custom music");
+            waitItemCustomMusic = WaitScreen.Add("Preloading custom music ♫");
 
             foreach (var audioClipPath in CustomMusic.ToList())
             {
@@ -579,56 +583,62 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         }
         private IEnumerator Play()
         {
-            IteratePlaylist();
-            GeneratePlaylist();
-
-            var audioClipPath = playlist.ElementAt(CurrentTrackIndex);
-            var audioClip = audioClipPath.Value;
-            if (audioClip == null || audioClip.loadState == AudioDataLoadState.Loading)
+            if (!musicSource.isPlaying)
             {
-                generatingAudioClip = true;
+                IteratePlaylist();
+                GeneratePlaylist();
 
-                if (audioClip == null)
+                var audioClipPath = playlist.ElementAt(CurrentTrackIndex);
+                var audioClip = audioClipPath.Value;
+                if (audioClip == null || audioClip.loadState == AudioDataLoadState.Loading)
                 {
-                    CoroutineTask<AudioClipResult> loadTrackTask = LoadTrack(audioClipPath.Key);
-                    yield return loadTrackTask;
-                    yield return new WaitWhile(() => loadTrackTask.GetResult() == null);
-                    audioClip = loadTrackTask.GetResult().AudioClip;
+                    generatingAudioClip = true;
+
+                    if (audioClip == null)
+                    {
+                        CoroutineTask<AudioClipResult> loadTrackTask = LoadTrack(audioClipPath.Key);
+                        yield return loadTrackTask;
+                        yield return new WaitWhile(() => loadTrackTask.GetResult() == null);
+                        audioClip = loadTrackTask.GetResult().AudioClip;
+                    }
+
+                    if (audioClip == null)
+                    {
+                        ErrorMessage.AddError($"Failed to load {Path.GetFileName(audioClipPath.Key)}, see error log for details.");
+                        yield break;
+                    }
+
+                    yield return new WaitWhile(() => audioClip.loadState == AudioDataLoadState.Loading);
+                    RegisterAudioClip(audioClipPath.Key, audioClip);
+
+                    generatingAudioClip = false;
                 }
 
-                if (audioClip == null)
+                if (audioClip.loadState != AudioDataLoadState.Loaded)
                 {
-                    ErrorMessage.AddError($"Failed to load {Path.GetFileName(audioClipPath.Key)}, see error log for details.");
+                    ErrorMessage.AddError($"Failed to load {Path.GetFileName(audioClipPath.Key)}.");
                     yield break;
                 }
 
-                yield return new WaitWhile(() => audioClip.loadState == AudioDataLoadState.Loading);
-                RegisterAudioClip(audioClipPath.Key, audioClip);
-
-                generatingAudioClip = false;
-            }
-
-            if (audioClip.loadState != AudioDataLoadState.Loaded)
-            {
-                ErrorMessage.AddError($"Failed to load {Path.GetFileName(audioClipPath.Key)}.");
-                yield break;
-            }
-
-            var playDelayed = musicSource.clip != null;
-            musicSource.clip = audioClip;
-            if (playDelayed)
-            {
-                var delay = currentSilenceLength;
-                musicSource.PlayDelayed(delay);
-                yield return new WaitForSecondsRealtime(delay);
-            }
-            else
-            {
-                musicSource.Play();
-            }
-            if (musicSource.isPlaying)
-            {
-                timeOfLastMusic = Time.time;
+                if (musicSource.clip != audioClipPath.Value)
+                {
+                    var playDelayed = musicSource.clip != null;
+                    musicSource.clip = audioClip;
+                    if (playDelayed)
+                    {
+                        var delay = currentSilenceLength;
+                        musicSource.PlayDelayed(delay);
+                        yield return new WaitForSecondsRealtime(delay);
+                    }
+                    else
+                    {
+                        musicSource.Play();
+                    }
+                    if (musicSource.isPlaying)
+                    {
+                        timeOfLastMusic = Time.time;
+                    }
+                }
             }
         }
 

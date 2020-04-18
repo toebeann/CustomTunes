@@ -11,5 +11,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         public KeyCode NextTrackKey { get; set; } = KeyCode.None;
         public KeyCode PreviousTrackKey { get; set; } = KeyCode.None;
         public KeyCode StopKey { get; set; } = KeyCode.None;
+        public int MinimumDelay { get; set; } = 1;
+        public int MaximumDelay { get; set; } = 6;
     }
 }
