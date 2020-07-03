@@ -10,6 +10,8 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         [QModPatch]
         public static void ApplyPatches()
         {
+            CustomTunes.InitVersionChecker();
+
             var harmony = HarmonyInstance.Create("com.tobeyblaber.straitjacket.subnautica.customtunes.mod");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             CustomTunes.Initialise();

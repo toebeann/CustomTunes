@@ -12,7 +12,6 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems*{6feabc43-6a6e-421e-b90c-fae883f48a50}*SharedItemsImports = 13
-		..\..\..\SMLHelper\SMLHelper\SMLHelper.projitems*{763bad04-7ce3-412e-853e-06b285c22a6a}*SharedItemsImports = 4
 		..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems*{763bad04-7ce3-412e-853e-06b285c22a6a}*SharedItemsImports = 4
 		..\..\..\SMLHelper\SMLHelper\SMLHelper.projitems*{8be2ee17-2fad-4e56-bf48-f9def4880348}*SharedItemsImports = 13
 	EndGlobalSection
