@@ -7,7 +7,7 @@
     "Enable": true,
     "Game": "Subnautica",
     "VersionDependencies": {
-        "SMLHelper": "2.6.1"
+        "SMLHelper": "2.8.2"
     },
     "LoadAfter": [ "Straitjacket.Subnautica.Mods.VersionChecker" ]
 }
