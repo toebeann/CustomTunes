@@ -148,23 +148,6 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             OptionsPanelHandler.RegisterModOptions(new Options());
         }
 
-        public static void InitVersionChecker()
-        {
-            if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == "Straitjacket.Utility.VersionChecker"))
-            {
-                var modJson = AccessTools.TypeByName("Straitjacket.Utility.ModJson");
-
-                var versionCheck = AccessTools.Method(
-                    "Straitjacket.Utility.VersionChecker:Check",
-                    new Type[] { typeof(string), typeof(string), typeof(Version), typeof(string) },
-                    new Type[] { modJson }
-                    ).Invoke(null, new object[] {
-                    "https://github.com/tobeyStraitjacket/Straitjacket.Subnautica.Mods.CustomTunes/raw/master/CustomTunes/mod.json",
-                    "Version", null, "CustomTunes ♫"
-                });
-            }
-        }
-
         private static string tempPath = null;
         private static string TempPath => tempPath = tempPath ?? Path.Combine(Path.GetTempPath(), @"Straitjacket\Subnautica\Mods\CustomTunes\");
 
