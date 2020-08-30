@@ -2,12 +2,14 @@
     "Id": "Straitjacket.Subnautica.Mods.CustomTunes",
     "DisplayName": "CustomTunes",
     "Author": "Tobey Blaber",
-    "Version": "1.2",
+    "Version": "1.3",
     "AssemblyName": "Straitjacket.Subnautica.Mods.CustomTunes.dll",
     "Enable": true,
     "Game": "Subnautica",
     "VersionDependencies": {
-        "SMLHelper": "2.6.1"
+        "SMLHelper": "2.8.2"
     },
-    "LoadAfter": [ "Straitjacket.Subnautica.Mods.VersionChecker" ]
+    "VersionChecker": {
+        "LatestVersionURL": "https://github.com/tobeyStraitjacket/Straitjacket.Subnautica.Mods.CustomTunes/raw/master/CustomTunes/mod.json"
+    }
 }

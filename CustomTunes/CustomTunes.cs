@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HeyRed.Mime;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using MimeTypes;
 using SMLHelper.V2.Handlers;
 using SMLHelper.V2.Utility;
 using NAudio.Wave;
@@ -16,7 +16,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
 using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
-using Harmony;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -70,12 +69,12 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     Console.WriteLine($"[CustomTunes] {e.Message}");
                     Console.WriteLine("[CustomTunes] Resorting to mime type mapping via file extension rather than file signature.");
 
-                    return MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+                    return MimeTypesMap.GetMimeType(Path.GetExtension(filename));
                 }
             }
             else
             {
-                return MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+                return MimeTypesMap.GetMimeType(Path.GetExtension(filename));
             }
         }
 
@@ -148,23 +147,6 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             OptionsPanelHandler.RegisterModOptions(new Options());
         }
 
-        public static void InitVersionChecker()
-        {
-            if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == "Straitjacket.Utility.VersionChecker"))
-            {
-                var modJson = AccessTools.TypeByName("Straitjacket.Utility.ModJson");
-
-                var versionCheck = AccessTools.Method(
-                    "Straitjacket.Utility.VersionChecker:Check",
-                    new Type[] { typeof(string), typeof(string), typeof(Version), typeof(string) },
-                    new Type[] { modJson }
-                    ).Invoke(null, new object[] {
-                    "https://github.com/tobeyStraitjacket/Straitjacket.Subnautica.Mods.CustomTunes/raw/master/CustomTunes/mod.json",
-                    "Version", null, "CustomTunes ♫"
-                });
-            }
-        }
-
         private static string tempPath = null;
         private static string TempPath => tempPath = tempPath ?? Path.Combine(Path.GetTempPath(), @"Straitjacket\Subnautica\Mods\CustomTunes\");
 
@@ -211,7 +193,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         };
         private static bool ValidAudioFile(string filename)
         {
-            var preliminaryMimeType = MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+            var preliminaryMimeType = MimeTypesMap.GetMimeType(Path.GetExtension(filename));
             if (!acceptedMimeTypes.Any(acceptedMimeType => acceptedMimeType.IsMatch(preliminaryMimeType)))
             {
                 return false;
@@ -286,13 +268,13 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 musicSource.volume = volume;
             }
 
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_STOP) || KeyCodeUtils.GetKeyDown(Config.StopKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_STOP) || (Config.StopKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.StopKey)))
             {
                 stopped = true;
                 paused = false;
                 Stop();
             }
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PLAY_PAUSE) || KeyCodeUtils.GetKeyDown(Config.PlayPauseKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PLAY_PAUSE) || (Config.PlayPauseKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.PlayPauseKey)))
             {
                 if (!stopped)
                 {
@@ -307,11 +289,11 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     musicSource.Play();
                 }
             }
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_NEXT_TRACK) || KeyCodeUtils.GetKeyDown(Config.NextTrackKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_NEXT_TRACK) || (Config.NextTrackKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.NextTrackKey)))
             {
                 NextTrack();
             }
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PREV_TRACK) || KeyCodeUtils.GetKeyDown(Config.PreviousTrackKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PREV_TRACK) || (Config.PreviousTrackKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.PreviousTrackKey)))
             {
                 if (CurrentTrackIndex > 0 && Time.time - timeOfLastMusic <= 1)
                 {
@@ -393,7 +375,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
 
         private static Coroutine OSTPreload = null;
         private static Coroutine CustomMusicPreload = null;
-        private static IEnumerator LoadMusic(bool force = false)
+        internal static IEnumerator LoadMusic(bool force = false)
         {
             if (Config.IncludeOST)
             {
