@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using QModManager.API.ModLoading;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
@@ -12,8 +12,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         {
             CustomTunes.InitVersionChecker();
 
-            var harmony = HarmonyInstance.Create("com.tobeyblaber.straitjacket.subnautica.customtunes.mod");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "com.tobeyblaber.straitjacket.subnautica.customtunes.mod");
             CustomTunes.Initialise();
         }
     }
