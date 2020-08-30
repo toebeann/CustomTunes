@@ -1,5 +1,4 @@
-﻿using Harmony;
-using UWE;
+﻿using HarmonyLib;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes.Patch
 {

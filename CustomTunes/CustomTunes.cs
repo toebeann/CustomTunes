@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using HarmonyLib;
 using MimeTypes;
 using SMLHelper.V2.Handlers;
 using SMLHelper.V2.Utility;
@@ -16,7 +17,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
 using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
-using Harmony;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -286,13 +286,13 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 musicSource.volume = volume;
             }
 
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_STOP) || KeyCodeUtils.GetKeyDown(Config.StopKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_STOP) || (Config.StopKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.StopKey)))
             {
                 stopped = true;
                 paused = false;
                 Stop();
             }
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PLAY_PAUSE) || KeyCodeUtils.GetKeyDown(Config.PlayPauseKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PLAY_PAUSE) || (Config.PlayPauseKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.PlayPauseKey)))
             {
                 if (!stopped)
                 {
@@ -307,11 +307,11 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     musicSource.Play();
                 }
             }
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_NEXT_TRACK) || KeyCodeUtils.GetKeyDown(Config.NextTrackKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_NEXT_TRACK) || (Config.NextTrackKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.NextTrackKey)))
             {
                 NextTrack();
             }
-            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PREV_TRACK) || KeyCodeUtils.GetKeyDown(Config.PreviousTrackKey))
+            if (VirtualKey.GetKeyDown(VK.VK_MEDIA_PREV_TRACK) || (Config.PreviousTrackKey != KeyCode.None && KeyCodeUtils.GetKeyDown(Config.PreviousTrackKey)))
             {
                 if (CurrentTrackIndex > 0 && Time.time - timeOfLastMusic <= 1)
                 {
@@ -393,7 +393,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
 
         private static Coroutine OSTPreload = null;
         private static Coroutine CustomMusicPreload = null;
-        private static IEnumerator LoadMusic(bool force = false)
+        internal static IEnumerator LoadMusic(bool force = false)
         {
             if (Config.IncludeOST)
             {

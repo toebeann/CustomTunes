@@ -7,13 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straitjacket.Subnautica.Mod
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VirtualKey", "..\..\..\VirtualKey\VirtualKey\VirtualKey.shproj", "{6FEABC43-6A6E-421E-B90C-FAE883F48A50}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SMLHelper", "..\..\..\SMLHelper\SMLHelper\SMLHelper.shproj", "{8BE2EE17-2FAD-4E56-BF48-F9DEF4880348}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems*{6feabc43-6a6e-421e-b90c-fae883f48a50}*SharedItemsImports = 13
 		..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems*{763bad04-7ce3-412e-853e-06b285c22a6a}*SharedItemsImports = 4
-		..\..\..\SMLHelper\SMLHelper\SMLHelper.projitems*{8be2ee17-2fad-4e56-bf48-f9def4880348}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
