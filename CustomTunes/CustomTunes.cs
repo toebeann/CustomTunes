@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HeyRed.Mime;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using HarmonyLib;
-using MimeTypes;
 using SMLHelper.V2.Handlers;
 using SMLHelper.V2.Utility;
 using NAudio.Wave;
@@ -70,12 +69,12 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     Console.WriteLine($"[CustomTunes] {e.Message}");
                     Console.WriteLine("[CustomTunes] Resorting to mime type mapping via file extension rather than file signature.");
 
-                    return MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+                    return MimeTypesMap.GetMimeType(Path.GetExtension(filename));
                 }
             }
             else
             {
-                return MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+                return MimeTypesMap.GetMimeType(Path.GetExtension(filename));
             }
         }
 
@@ -194,7 +193,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         };
         private static bool ValidAudioFile(string filename)
         {
-            var preliminaryMimeType = MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+            var preliminaryMimeType = MimeTypesMap.GetMimeType(Path.GetExtension(filename));
             if (!acceptedMimeTypes.Any(acceptedMimeType => acceptedMimeType.IsMatch(preliminaryMimeType)))
             {
                 return false;
