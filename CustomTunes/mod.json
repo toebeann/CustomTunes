@@ -9,5 +9,7 @@
     "VersionDependencies": {
         "SMLHelper": "2.8.2"
     },
-    "LoadAfter": [ "Straitjacket.Subnautica.Mods.VersionChecker" ]
+    "VersionChecker": {
+        "LatestVersionURL": "https://github.com/tobeyStraitjacket/Straitjacket.Subnautica.Mods.CustomTunes/raw/master/CustomTunes/mod.json"
+    }
 }
