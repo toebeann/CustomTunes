@@ -5,12 +5,12 @@ VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straitjacket.Subnautica.Mods.CustomTunes", "CustomTunes\Straitjacket.Subnautica.Mods.CustomTunes.csproj", "{763BAD04-7CE3-412E-853E-06B285C22A6A}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VirtualKey", "..\..\..\VirtualKey\VirtualKey\VirtualKey.shproj", "{6FEABC43-6A6E-421E-B90C-FAE883F48A50}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VirtualKey", "Straitjacket.VirtualKey\VirtualKey\VirtualKey.shproj", "{6FEABC43-6A6E-421E-B90C-FAE883F48A50}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems*{6feabc43-6a6e-421e-b90c-fae883f48a50}*SharedItemsImports = 13
-		..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems*{763bad04-7ce3-412e-853e-06b285c22a6a}*SharedItemsImports = 4
+		Straitjacket.VirtualKey\VirtualKey\VirtualKey.projitems*{6feabc43-6a6e-421e-b90c-fae883f48a50}*SharedItemsImports = 13
+		Straitjacket.VirtualKey\VirtualKey\VirtualKey.projitems*{763bad04-7ce3-412e-853e-06b285c22a6a}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

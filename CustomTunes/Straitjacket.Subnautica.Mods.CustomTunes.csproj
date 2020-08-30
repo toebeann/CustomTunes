@@ -107,7 +107,7 @@
     <None Include=".editorconfig" />
     <None Include="mod.json" />
   </ItemGroup>
-  <Import Project="..\..\..\..\VirtualKey\VirtualKey\VirtualKey.projitems" Label="Shared" />
+  <Import Project="..\Straitjacket.VirtualKey\VirtualKey\VirtualKey.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "E:\Toadbomb\Documents\PowerShell Scripts\Subnautica Modding\post-build.ps1" powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File "E:\Toadbomb\Documents\PowerShell Scripts\Subnautica Modding\post-build.ps1" -ProjectName $(SolutionName) -ConfigurationName $(ConfigurationName) -ProjectDir $(ProjectDir) -TargetDir $(TargetDir) -TargetPath $(TargetPath) -CopyDLLs true -ApplicationPath "C:\Program Files (x86)\Steam\steamapps\common\Subnautica" -SteamGameID 264710 -CopyModJSON true</PostBuildEvent>
