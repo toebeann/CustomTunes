@@ -1,5 +1,4 @@
-﻿using System;
-using SMLHelper.V2.Options;
+﻿using SMLHelper.V2.Options;
 using UWE;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes

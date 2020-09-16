@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
 using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
+using Logger = BepInEx.Subnautica.Logger;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -65,9 +66,9 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 catch (EntryPointNotFoundException e)
                 {
                     urlmonFailed = true;
-                    Console.WriteLine("[CustomTunes] Urlmon.dll could not be loaded:");
-                    Console.WriteLine($"[CustomTunes] {e.Message}");
-                    Console.WriteLine("[CustomTunes] Resorting to mime type mapping via file extension rather than file signature.");
+                    Logger.LogWarning("Urlmon.dll could not be loaded:");
+                    Logger.LogWarning($"{e.Message}");
+                    Logger.LogWarning("Resorting to mime type mapping via file extension rather than file signature.");
 
                     return MimeTypesMap.GetMimeType(Path.GetExtension(filename));
                 }
@@ -130,9 +131,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 }
                 catch (Exception e)
                 {
-                    var error = $"Failed to load {Path.GetFileName(filename)}: {e.Message}";
-
-                    Console.WriteLine($"[CustomTunes] {error}");
+                    Logger.LogError($"Failed to load {Path.GetFileName(filename)}: {e.Message}");
                     return null;
                 }
             }
