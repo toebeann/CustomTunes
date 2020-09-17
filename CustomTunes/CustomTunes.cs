@@ -1,25 +1,25 @@
-﻿using HeyRed.Mime;
+﻿using HarmonyLib;
+using HeyRed.Mime;
+using NAudio.Wave;
+using SMLHelper.V2.Handlers;
+using SMLHelper.V2.Utility;
+using Straitjacket.Subnautica.Mods.CustomTunes.Patches;
 using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using SMLHelper.V2.Handlers;
-using SMLHelper.V2.Utility;
-using NAudio.Wave;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
 using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
 using Logger = BepInEx.Subnautica.Logger;
-using System.Diagnostics;
-using HarmonyLib;
-using Straitjacket.Subnautica.Mods.CustomTunes.Patches;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -142,15 +142,13 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             return waveFilename;
         }
 
-        public static Config Config = new Config();
+        public static Config Config = OptionsPanelHandler.Main.RegisterModOptions<Config>();
         public static void Initialise()
         {
             Logger.LogInfo("Initialising...");
             var stopwatch = Stopwatch.StartNew();
 
             ApplyHarmonyPatches();
-            Config.Load();
-            OptionsPanelHandler.RegisterModOptions(new Options());
 
             stopwatch.Stop();
             Logger.LogInfo($"Initialised in {stopwatch.ElapsedMilliseconds}ms.");
@@ -655,6 +653,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     }
                 }
             }
+            yield break;
         }
 
         public void Stop()
