@@ -2,12 +2,14 @@
 using UnityEngine.SceneManagement;
 using UWE;
 
-namespace Straitjacket.Subnautica.Mods.CustomTunes.Patch
+namespace Straitjacket.Subnautica.Mods.CustomTunes.Patches
 {
-    [HarmonyPatch(typeof(FMOD_CustomEmitter), nameof(FMOD_CustomEmitter.Play))]
-    internal static class FMOD_CustomEmitter_Play
+    internal static class FMOD_CustomEmitterPatch
     {
-        static bool Prefix(FMOD_CustomEmitter __instance)
+        #region FMOD_CustomEmitter.Play
+        [HarmonyPatch(typeof(FMOD_CustomEmitter), nameof(FMOD_CustomEmitter.Play))]
+        [HarmonyPrefix]
+        static bool PlayPrefix(FMOD_CustomEmitter __instance)
         {
             if (__instance?.asset?.path != null && __instance.asset.path.Contains(@"event:/env/music/") && SceneManager.GetActiveScene().name == "Main")
             {
@@ -19,12 +21,12 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes.Patch
                 return true;
             }
         }
-    }
+        #endregion
 
-    [HarmonyPatch(typeof(FMOD_CustomEmitter), nameof(FMOD_CustomEmitter.Stop))]
-    internal static class FMOD_CustomEmitter_Stop
-    {
-        static bool Prefix(FMOD_CustomEmitter __instance)
+        #region FMOD_CustomEmitter.Stop
+        [HarmonyPatch(typeof(FMOD_CustomEmitter), nameof(FMOD_CustomEmitter.Stop))]
+        [HarmonyPrefix]
+        static bool StopPrefix(FMOD_CustomEmitter __instance)
         {
             if (__instance?.asset?.path != null && __instance.asset.path.Contains(@"event:/env/music/"))
             {
@@ -36,12 +38,12 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes.Patch
                 return true;
             }
         }
-    }
+        #endregion
 
-    [HarmonyPatch(typeof(FMOD_CustomEmitter), nameof(FMOD_CustomEmitter.ReleaseEvent))]
-    internal static class FMOD_CustomEmitter_ReleaseEvent
-    {
-        static bool Prefix(FMOD_CustomEmitter __instance)
+        #region FMOD_CustomEmitter.ReleaseEvent
+        [HarmonyPatch(typeof(FMOD_CustomEmitter), nameof(FMOD_CustomEmitter.ReleaseEvent))]
+        [HarmonyPrefix]
+        static bool ReleaseEventPrefix(FMOD_CustomEmitter __instance)
         {
             if (__instance?.asset?.path != null && __instance.asset.path.Contains(@"event:/env/music/"))
             {
@@ -53,5 +55,6 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes.Patch
                 return true;
             }
         }
+        #endregion
     }
 }

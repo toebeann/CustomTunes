@@ -17,6 +17,9 @@ using UnityEngine.SceneManagement;
 using UWE;
 using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
 using Logger = BepInEx.Subnautica.Logger;
+using System.Diagnostics;
+using HarmonyLib;
+using Straitjacket.Subnautica.Mods.CustomTunes.Patches;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -142,8 +145,27 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
         public static Config Config = new Config();
         public static void Initialise()
         {
+            Logger.LogInfo("Initialising...");
+            var stopwatch = Stopwatch.StartNew();
+
+            ApplyHarmonyPatches();
             Config.Load();
             OptionsPanelHandler.RegisterModOptions(new Options());
+
+            stopwatch.Stop();
+            Logger.LogInfo($"Initialised in {stopwatch.ElapsedMilliseconds}ms.");
+        }
+
+        private static void ApplyHarmonyPatches()
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            var harmony = new Harmony("com.tobeyblaber.straitjacket.subnautica.customtunes.mod");
+            harmony.PatchAll(typeof(FMOD_CustomEmitterPatch));
+            harmony.PatchAll(typeof(IngameMenuPatch));
+            harmony.PatchAll(typeof(uGUI_OptionsPanelPatch));
+
+            Logger.LogInfo($"Harmony patches applied in {stopwatch.ElapsedMilliseconds}ms.");
         }
 
         private static string tempPath = null;

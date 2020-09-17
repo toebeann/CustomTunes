@@ -93,11 +93,11 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="CustomTunes.cs" />
-    <Compile Include="HarmonyPatcher.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Patch\FMOD_CustomEmitter.cs" />
-    <Compile Include="Patch\IngameMenu.cs" />
-    <Compile Include="Patch\uGUI_OptionsPanel.cs" />
+    <Compile Include="Patches\FMOD_CustomEmitterPatch.cs" />
+    <Compile Include="Patches\IngameMenuPatch.cs" />
+    <Compile Include="Patches\uGUI_OptionsPanelPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wildcard.cs" />
   </ItemGroup>
