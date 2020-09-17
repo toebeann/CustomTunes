@@ -1,21 +1,25 @@
-﻿using HeyRed.Mime;
+﻿using HarmonyLib;
+using HeyRed.Mime;
+using NAudio.Wave;
+using SMLHelper.V2.Handlers;
+using SMLHelper.V2.Utility;
+using Straitjacket.Subnautica.Mods.CustomTunes.Patches;
 using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using SMLHelper.V2.Handlers;
-using SMLHelper.V2.Utility;
-using NAudio.Wave;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
 using AudioClipPath = System.Collections.Generic.KeyValuePair<string, UnityEngine.AudioClip>;
+using Logger = BepInEx.Subnautica.Logger;
 
 namespace Straitjacket.Subnautica.Mods.CustomTunes
 {
@@ -65,9 +69,9 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 catch (EntryPointNotFoundException e)
                 {
                     urlmonFailed = true;
-                    Console.WriteLine("[CustomTunes] Urlmon.dll could not be loaded:");
-                    Console.WriteLine($"[CustomTunes] {e.Message}");
-                    Console.WriteLine("[CustomTunes] Resorting to mime type mapping via file extension rather than file signature.");
+                    Logger.LogWarning("Urlmon.dll could not be loaded:");
+                    Logger.LogWarning($"{e.Message}");
+                    Logger.LogWarning("Resorting to mime type mapping via file extension rather than file signature.");
 
                     return MimeTypesMap.GetMimeType(Path.GetExtension(filename));
                 }
@@ -130,9 +134,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                 }
                 catch (Exception e)
                 {
-                    var error = $"Failed to load {Path.GetFileName(filename)}: {e.Message}";
-
-                    Console.WriteLine($"[CustomTunes] {error}");
+                    Logger.LogError($"Failed to load {Path.GetFileName(filename)}: {e.Message}");
                     return null;
                 }
             }
@@ -140,11 +142,28 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
             return waveFilename;
         }
 
-        public static Config Config = new Config();
+        public static Config Config = OptionsPanelHandler.Main.RegisterModOptions<Config>();
         public static void Initialise()
         {
-            Config.Load();
-            OptionsPanelHandler.RegisterModOptions(new Options());
+            Logger.LogInfo("Initialising...");
+            var stopwatch = Stopwatch.StartNew();
+
+            ApplyHarmonyPatches();
+
+            stopwatch.Stop();
+            Logger.LogInfo($"Initialised in {stopwatch.ElapsedMilliseconds}ms.");
+        }
+
+        private static void ApplyHarmonyPatches()
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            var harmony = new Harmony("com.tobeyblaber.straitjacket.subnautica.customtunes.mod");
+            harmony.PatchAll(typeof(FMOD_CustomEmitterPatch));
+            harmony.PatchAll(typeof(IngameMenuPatch));
+            harmony.PatchAll(typeof(uGUI_OptionsPanelPatch));
+
+            Logger.LogInfo($"Harmony patches applied in {stopwatch.ElapsedMilliseconds}ms.");
         }
 
         private static string tempPath = null;
@@ -634,6 +653,7 @@ namespace Straitjacket.Subnautica.Mods.CustomTunes
                     }
                 }
             }
+            yield break;
         }
 
         public void Stop()
